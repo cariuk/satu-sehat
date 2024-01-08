@@ -26,6 +26,6 @@
         "ext-curl": "*",
         "ext-openssl": "*",
         "ext-json": "*",
-        "phpseclib/phpseclib": "^3.0"
+        "phpseclib/phpseclib": "*"
     }
 }
