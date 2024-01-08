@@ -6,12 +6,12 @@ class Url
 {
     private static function authHost($subUrl)
     {
-        return Constant::$authUrl.'/'.$subUrl;
+        return Constant::authUrl().'/'.$subUrl;
     }
 
     private static function baseUrl($subUrl)
     {
-        return Constant::$baseUrl.'/'.$subUrl;
+        return Constant::baseUrl().'/'.$subUrl;
     }
 
     private static function consentUrl($subUrl)

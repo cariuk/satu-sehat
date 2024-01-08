@@ -2,24 +2,101 @@
 
 namespace syahrulzzadie\SatuSehat\Utilitys;
 
-defined('_SATUSEHAT_CLIENT_ID_') or die('Satu Sehat Client Id is required!');
-defined('_SATUSEHAT_CLIENT_SECRET_') or die('Satu Sehat Client Secret is required!');
-defined('_SATUSEHAT_ORGANIZATION_ID_') or die('Satu Sehat Organization Id is required!');
+use Dotenv\Dotenv;
 
 class Enviroment
 {
+    public function __construct()
+    {
+
+
+        switch (getenv('SATUSEHAT_ENV'))
+        {
+            case 'PROD' : {
+                $this->client_id =  getenv('CLIENTID_PROD');
+                $this->client_secret = getenv('CLIENTSECRET_PROD');
+                $this->organization_id = getenv('CLIENTSECRET_PROD');
+                break;
+            }
+            case 'STG' : {
+                $this->client_id =  getenv('CLIENTID_STG');
+                $this->client_secret = getenv('CLIENTSECRET_STG');
+                $this->organization_id = getenv('CLIENTSECRET_STG');
+
+                break;
+            }
+            case 'DEV' : {
+                $this->client_id =  getenv('CLIENTID_DEV');
+                $this->client_secret = getenv('CLIENTSECRET_DEV');
+                $this->organization_id = getenv('CLIENTSECRET_DEV');
+                break;
+            }
+            default : {
+                return [
+                    'status' => false,
+                    'message' => 'Add your organization_id at environment first'
+                ];
+            }
+        }
+    }
+
     public static function clientId()
     {
-        return _SATUSEHAT_CLIENT_ID_;
+        $dotenv = Dotenv::createUnsafeImmutable(getcwd());
+        $dotenv->safeLoad();
+        switch (getenv('SATUSEHAT_ENV')){
+            case 'PROD' : {
+                return getenv('CLIENTID_PROD');
+                break;
+            }
+            case 'STG' : {
+                return getenv('CLIENTID_STG');
+                break;
+            }
+            case 'DEV' : {
+                return getenv('CLIENTID_DEV');
+                break;
+            }
+        }
     }
 
     public static function clientSecret()
     {
-        return _SATUSEHAT_CLIENT_SECRET_;
+        $dotenv = Dotenv::createUnsafeImmutable(getcwd());
+        $dotenv->safeLoad();
+        switch (getenv('SATUSEHAT_ENV')){
+            case 'PROD' : {
+                return getenv('CLIENTSECRET_PROD');
+                break;
+            }
+            case 'STG' : {
+                return getenv('CLIENTSECRET_STG');
+                break;
+            }
+            case 'DEV' : {
+                return getenv('CLIENTSECRET_DEV');
+                break;
+            }
+        }
     }
 
     public static function organizationId()
     {
-        return _SATUSEHAT_ORGANIZATION_ID_;
+        $dotenv = Dotenv::createUnsafeImmutable(getcwd());
+        $dotenv->safeLoad();
+        switch (getenv('SATUSEHAT_ENV')){
+            case 'PROD' : {
+                return getenv('ORGANIZATION_ID_PROD');
+                break;
+            }
+            case 'STG' : {
+                return getenv('ORGANIZATION_ID_STG');
+                break;
+            }
+            case 'DEV' : {
+                return getenv('ORGANIZATION_ID_DEV');
+                break;
+            }
+        }
     }
 }
