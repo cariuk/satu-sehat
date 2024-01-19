@@ -8,7 +8,7 @@ class DateTimeFormat
     {
         $date = date('Y-m-d');
         $time = date('H:i:s');
-        return $date.'T'.$time.'+07:00';
+        return $date.'T'.$time.'+08:00';
     }
 
     public static function dateNow()
@@ -20,7 +20,7 @@ class DateTimeFormat
     {
         $date = date('Y-m-d',strtotime($dateTime));
         $time = date('H:i:s',strtotime($dateTime));
-        return $date.'T'.$time.'+07:00';
+        return $date.'T'.$time.'+08:00';
     }
 
     public static function dateParse($dateTime)
@@ -32,7 +32,7 @@ class DateTimeFormat
     {
         $date = date('Y-m-d',strtotime($date));
         $time = date('H:i:s',strtotime($time));
-        return $date.'T'.$time.'+07:00';
+        return $date.'T'.$time.'+08:00';
     }
 
     public static function dateParseDateAndTime($date,$time)

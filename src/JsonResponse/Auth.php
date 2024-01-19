@@ -118,7 +118,10 @@ class Auth
             ->where('created_at', '>', now()->subMinutes(50))->first();
 
         if ($token) {
-            return $token->token;
+            return [
+                'status' => true,
+                'token' => $token->token
+            ];
         } else {
             $generate = self::generateToken();
             if ($generate['status']) {

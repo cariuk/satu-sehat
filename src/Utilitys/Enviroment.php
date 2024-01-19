@@ -86,15 +86,15 @@ class Enviroment
         $dotenv->safeLoad();
         switch (getenv('SATUSEHAT_ENV')){
             case 'PROD' : {
-                return getenv('ORGANIZATION_ID_PROD');
+                return getenv('ORGID_PROD');
                 break;
             }
             case 'STG' : {
-                return getenv('ORGANIZATION_ID_STG');
+                return getenv('ORGID_STG');
                 break;
             }
             case 'DEV' : {
-                return getenv('ORGANIZATION_ID_DEV');
+                return getenv('ORGID_DEV');
                 break;
             }
         }

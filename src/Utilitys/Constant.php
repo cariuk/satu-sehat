@@ -34,6 +34,7 @@ class Constant
     {
         $dotenv = Dotenv::createUnsafeImmutable(getcwd());
         $dotenv->safeLoad();
+
         switch (getenv('SATUSEHAT_ENV')){
             case 'PROD' : {
                 return getenv('SATUSEHAT_FHIR_PROD');
@@ -44,7 +45,7 @@ class Constant
                 break;
             }
             case 'DEV' : {
-                return getenv('SATUSEHAT_FHIR_deV');
+                return getenv('SATUSEHAT_FHIR_DEV');
                 break;
             }
         }

@@ -46,7 +46,7 @@ class Organization
             }
             return [
                 'status' => false,
-                'message' => $response
+                'message' => json_decode($response)
             ];
         }
         return [

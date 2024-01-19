@@ -2,6 +2,7 @@
 
 namespace syahrulzzadie\SatuSehat;
 
+use Illuminate\Validation\ValidationException;
 use syahrulzzadie\SatuSehat\JsonData as jsonData;
 use syahrulzzadie\SatuSehat\JsonResponse as jsonResponse;
 use syahrulzzadie\SatuSehat\Utilitys\HttpRequest;
@@ -40,31 +41,36 @@ class SatuSehatCore
             $response = $http['response'];
             return jsonResponse\Organization::show($response);
         }
+
         return jsonResponse\Error::http($http);
     }
 
-    public static function createOrganization($kode, $name)
+    public static function createOrganization($kode, $name, $instansi)
     {
         $url = Url::createOrganizationUrl();
-        $formData = jsonData\Organization::formCreateData($kode,$name);
-        $http = HttpRequest::post($url,$formData);
-        if ($http['status']) {
-            $response = $http['response'];
-            return jsonResponse\Organization::convert($response);
+        $formData = jsonData\Organization::formCreateData($kode, $name, $instansi);
+
+        [$statusCode, $response] = HttpRequest::post($url, $formData);
+        if ($statusCode == 201) {
+            return $response;
         }
-        return jsonResponse\Error::http($http);
+
+        throw ValidationException::withMessages([
+            'kode' => ['Kode sudah terdaftar di Satu Sehat'],
+        ]);
     }
 
-    public static function updateOrganization($ihsNumber, $kode, $name)
+    public static function updateOrganization($ihsNumber, $kode, $name, $instansi)
     {
         $url = Url::updateOrganizationUrl($ihsNumber);
-        $formData = jsonData\Organization::formUpdateData($ihsNumber,$kode,$name);
-        $http = HttpRequest::put($url,$formData);
-        if ($http['status']) {
-            $response = $http['response'];
-            return jsonResponse\Organization::convert($response);
+        $formData = jsonData\Organization::formUpdateData($ihsNumber, $kode, $name, $instansi);
+        [$statusCode, $response] = HttpRequest::put($url, $formData);
+        if ($statusCode == 200) {
+            return $response;
         }
-        return jsonResponse\Error::http($http);
+        throw ValidationException::withMessages([
+            'kode' => ['Kode sudah terdaftar di Satu Sehat'],
+        ]);
     }
 
     public static function showLocation($ihsNumberOrganization)
@@ -78,35 +84,33 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function createLocation($organization,$kode,$name)
+    public static function createLocation($organization, $kode, $name, $instansi)
     {
         $url = Url::createLocationUrl();
-        $formData = jsonData\Location::formCreateData($organization,$kode,$name);
-        $http = HttpRequest::post($url,$formData);
-        if ($http['status']) {
-            $response = $http['response'];
-            return jsonResponse\Location::convert($response);
+        $formData = jsonData\Location::formCreateData($organization, $kode, $name, $instansi);
+        [$statusCode, $response] = HttpRequest::post($url, $formData);
+        if ($statusCode == 201) {
+            return $response;
         }
         return jsonResponse\Error::http($http);
     }
 
-    public static function updateLocation($ihsNumber,$organization,$kode,$name)
+    public static function updateLocation($ihsNumber, $organization, $kode, $name, $instansi)
     {
         $url = Url::updateLocationUrl($ihsNumber);
-        $formData = jsonData\Location::formUpdateData($ihsNumber,$organization,$kode,$name);
-        $http = HttpRequest::put($url,$formData);
-        if ($http['status']) {
-            $response = $http['response'];
-            return jsonResponse\Location::convert($response);
+        $formData = jsonData\Location::formUpdateData($ihsNumber, $organization, $kode, $name, $instansi);
+        [$statusCode, $response] = HttpRequest::put($url, $formData);
+        if ($statusCode == 200) {
+            return $response;
         }
         return jsonResponse\Error::http($http);
     }
 
-    public static function updateConsent($ihsNumber,$petugas,$status)
+    public static function updateConsent($ihsNumber, $petugas, $status)
     {
         $url = Url::updateConsentPatientUrl();
-        $formData = jsonData\Consent::formData($ihsNumber,$petugas,$status);
-        $http = HttpRequest::post($url,$formData);
+        $formData = jsonData\Consent::formData($ihsNumber, $petugas, $status);
+        $http = HttpRequest::post($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\Consent::convert($response);
@@ -114,38 +118,44 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function createEncounter($noRawat,$date,$time,$patient,$practitioner,$location)
+    public static function createEncounter($noRawat, $date, $time, $patient, $practitioner, $location, $instansi)
     {
         $url = Url::createEncounterUrl();
-        $formData = jsonData\Encounter::formCreateData($noRawat,$date,$time,$patient,$practitioner,$location);
-        $http = HttpRequest::post($url,$formData);
-        if ($http['status']) {
-            $response = $http['response'];
-            return jsonResponse\Encounter::convert($response);
+        $formData = jsonData\Encounter::formCreateData(
+            $noRawat,
+            $date,
+            $time,
+            $patient,
+            $practitioner,
+            $location,
+            $instansi
+        );
+
+        [$statusCode, $response] = HttpRequest::post($url, $formData);
+        if ($statusCode == 201) {
+            return $response;
         }
         return jsonResponse\Error::http($http);
     }
 
-    public static function updateEncounter($encounter,$patient,$practitioner,$location)
+    public static function updateEncounter($encounter, $patient, $practitioner, $location, $instansi)
     {
         $url = Url::updateEncounterUrl($encounter->ihs_number);
-        $formData = jsonData\Encounter::formUpdateData($encounter,$patient,$practitioner,$location);
-        $http = HttpRequest::put($url,$formData);
-        if ($http['status']) {
-            $response = $http['response'];
-            return jsonResponse\Encounter::convert($response);
+        $formData = jsonData\Encounter::formUpdateData($encounter, $patient, $practitioner, $location, $instansi);
+        [$statusCode, $response] = HttpRequest::put($url, $formData);
+        if ($statusCode == 200) {
+            return $response;
         }
         return jsonResponse\Error::http($http);
     }
 
-    public static function updateEncounterCondition($encounter,$dataDiagnosa)
+    public static function updateEncounterCondition($encounter, $dataDiagnosa, $instansi)
     {
         $url = Url::updateEncounterUrl($encounter->ihs_number);
-        $formData = jsonData\Encounter::formUpdateCondition($encounter,$dataDiagnosa);
-        $http = HttpRequest::put($url,$formData);
-        if ($http['status']) {
-            $response = $http['response'];
-            return jsonResponse\Encounter::convert($response);
+        $formData = jsonData\Encounter::formUpdateCondition($encounter, $dataDiagnosa, $instansi);
+        [$statusCode, $response] = HttpRequest::put($url, $formData);
+        if ($statusCode == 200) {
+            return $response;
         }
         return jsonResponse\Error::http($http);
     }
@@ -153,54 +163,52 @@ class SatuSehatCore
     public static function historyEncounter($ihsNumberPatient)
     {
         $url = Url::historyEncounterUrl($ihsNumberPatient);
-        $http = HttpRequest::get($url);
-        if ($http['status']) {
-            $response = $http['response'];
-            return jsonResponse\Encounter::history($response);
+        [$statusCode, $response] = HttpRequest::get($url);
+        if ($statusCode == 200) {
+            return $response;
         }
         return jsonResponse\Error::http($http);
     }
 
-    public static function createCondition($encounter,$code,$name)
+    public static function createCondition($encounter, $code, $name, $instansi)
     {
         $url = Url::createConditionUrl();
-        $formData = jsonData\Condition::formCreateData($encounter,$code,$name);
-        $http = HttpRequest::post($url,$formData);
-        if ($http['status']) {
-            $response = $http['response'];
-            return jsonResponse\Condition::convert($response);
+        $formData = jsonData\Condition::formCreateData($encounter, $code, $name, $instansi);
+
+        [$statusCode, $response] = HttpRequest::post($url, $formData);
+        if ($statusCode == 201) {
+            return $response;
         }
-        return jsonResponse\Error::http($http);
+        return jsonResponse\Error::http($response);
     }
 
-    public static function updateCondition($ihsNumber,$encounter,$code,$name)
+    public static function updateCondition($ihsNumber, $encounter, $code, $name, $instansi)
     {
         $url = Url::updateConditionUrl($ihsNumber);
-        $formData = jsonData\Condition::formUpdateData($ihsNumber,$encounter,$code,$name);
-        $http = HttpRequest::put($url,$formData);
-        if ($http['status']) {
-            $response = $http['response'];
-            return jsonResponse\Condition::convert($response);
+        $formData = jsonData\Condition::formUpdateData($ihsNumber, $encounter, $code, $name, $instansi);
+        [$statusCode, $response]  = HttpRequest::put($url, $formData);
+        
+        if ($statusCode == 200) {
+            return $response;
         }
-        return jsonResponse\Error::http($http);
+        return jsonResponse\Error::http($response);
     }
 
     public static function historyCondition($ihsNumberPatient)
     {
         $url = Url::historyConditionUrl($ihsNumberPatient);
-        $http = HttpRequest::get($url);
-        if ($http['status']) {
-            $response = $http['response'];
-            return jsonResponse\Condition::history($response);
+        [$statusCode, $response] = HttpRequest::get($url);
+        if ($statusCode == 201) {
+            return $response;
         }
         return jsonResponse\Error::http($http);
     }
 
-    public static function createObservation($encounter,$practitioner,$name,$value)
+    public static function createObservation($encounter, $practitioner, $name, $value)
     {
         $url = Url::createObservationUrl();
-        $formData = jsonData\Observation::formCreateData($encounter,$practitioner,$name,$value);
-        $http = HttpRequest::post($url,$formData);
+        $formData = jsonData\Observation::formCreateData($encounter, $practitioner, $name, $value);
+        $http = HttpRequest::post($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\Observation::convert($response);
@@ -208,11 +216,11 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function updateObservation($ihsNumber,$encounter,$practitioner,$name,$value)
+    public static function updateObservation($ihsNumber, $encounter, $practitioner, $name, $value)
     {
         $url = Url::updateObservationUrl($ihsNumber);
-        $formData = jsonData\Observation::formUpdateData($ihsNumber,$encounter,$practitioner,$name,$value);
-        $http = HttpRequest::put($url,$formData);
+        $formData = jsonData\Observation::formUpdateData($ihsNumber, $encounter, $practitioner, $name, $value);
+        $http = HttpRequest::put($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\Observation::convert($response);
@@ -231,11 +239,11 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function createComposition($encounter,$kodeDiet,$code,$name,$text)
+    public static function createComposition($encounter, $kodeDiet, $code, $name, $text)
     {
         $url = Url::createCompositionUrl();
-        $formData = jsonData\Composition::formCreateData($encounter,$kodeDiet,$code,$name,$text);
-        $http = HttpRequest::post($url,$formData);
+        $formData = jsonData\Composition::formCreateData($encounter, $kodeDiet, $code, $name, $text);
+        $http = HttpRequest::post($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\Composition::convert($response);
@@ -243,11 +251,11 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function updateComposition($ihsNumber,$encounter,$kodeDiet,$code,$name,$text)
+    public static function updateComposition($ihsNumber, $encounter, $kodeDiet, $code, $name, $text)
     {
         $url = Url::updateCompositionUrl($ihsNumber);
-        $formData = jsonData\Composition::formUpdateData($ihsNumber,$encounter,$kodeDiet,$code,$name,$text);
-        $http = HttpRequest::put($url,$formData);
+        $formData = jsonData\Composition::formUpdateData($ihsNumber, $encounter, $kodeDiet, $code, $name, $text);
+        $http = HttpRequest::put($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\Composition::convert($response);
@@ -266,11 +274,11 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function createProcedure($encounter,$conditionCode,$conditionName,$procedureCode,$procedureName,$textNote)
+    public static function createProcedure($encounter, $conditionCode, $conditionName, $procedureCode, $procedureName, $textNote)
     {
         $url = Url::createProcedureUrl();
-        $formData = jsonData\Procedure::formCreateData($encounter,$conditionCode,$conditionName,$procedureCode,$procedureName,$textNote);
-        $http = HttpRequest::post($url,$formData);
+        $formData = jsonData\Procedure::formCreateData($encounter, $conditionCode, $conditionName, $procedureCode, $procedureName, $textNote);
+        $http = HttpRequest::post($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\Procedure::convert($response);
@@ -278,11 +286,11 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function updateProcedure($ihsNumber,$encounter,$conditionCode,$conditionName,$procedureCode,$procedureName,$textNote)
+    public static function updateProcedure($ihsNumber, $encounter, $conditionCode, $conditionName, $procedureCode, $procedureName, $textNote)
     {
         $url = Url::updateProcedureUrl($ihsNumber);
-        $formData = jsonData\Procedure::formUpdateData($ihsNumber,$encounter,$conditionCode,$conditionName,$procedureCode,$procedureName,$textNote);
-        $http = HttpRequest::put($url,$formData);
+        $formData = jsonData\Procedure::formUpdateData($ihsNumber, $encounter, $conditionCode, $conditionName, $procedureCode, $procedureName, $textNote);
+        $http = HttpRequest::put($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\Procedure::convert($response);
@@ -301,11 +309,11 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function createMedication($encounter,$noResep,$kodeObat,$namaObat,$dataBahanObat)
+    public static function createMedication($encounter, $noResep, $kodeObat, $namaObat, $dataBahanObat)
     {
         $url = Url::createMedicationUrl();
-        $formData = jsonData\Medication::formCreateData($encounter,$noResep,$kodeObat,$namaObat,$dataBahanObat);
-        $http = HttpRequest::post($url,$formData);
+        $formData = jsonData\Medication::formCreateData($encounter, $noResep, $kodeObat, $namaObat, $dataBahanObat);
+        $http = HttpRequest::post($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\Medication::convert($response);
@@ -313,11 +321,11 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function updateMedication($ihsNumber,$encounter,$noResep,$kodeObat,$namaObat,$dataBahanObat)
+    public static function updateMedication($ihsNumber, $encounter, $noResep, $kodeObat, $namaObat, $dataBahanObat)
     {
         $url = Url::updateMedicationUrl($ihsNumber);
-        $formData = jsonData\Medication::formUpdateData($ihsNumber,$encounter,$noResep,$kodeObat,$namaObat,$dataBahanObat);
-        $http = HttpRequest::put($url,$formData);
+        $formData = jsonData\Medication::formUpdateData($ihsNumber, $encounter, $noResep, $kodeObat, $namaObat, $dataBahanObat);
+        $http = HttpRequest::put($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\Medication::convert($response);
@@ -325,11 +333,11 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function createMedicationRequest($encounter,$medication,$noResep,$aturanPakai,$jumlahObatPerhari,$jumahHariObatHabis)
+    public static function createMedicationRequest($encounter, $medication, $noResep, $aturanPakai, $jumlahObatPerhari, $jumahHariObatHabis)
     {
         $url = Url::createMedicationRequestUrl();
-        $formData = jsonData\MedicationRequest::formCreateData($encounter,$medication,$noResep,$aturanPakai,$jumlahObatPerhari,$jumahHariObatHabis);
-        $http = HttpRequest::post($url,$formData);
+        $formData = jsonData\MedicationRequest::formCreateData($encounter, $medication, $noResep, $aturanPakai, $jumlahObatPerhari, $jumahHariObatHabis);
+        $http = HttpRequest::post($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\MedicationRequest::convert($response);
@@ -337,11 +345,11 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function updateMedicationRequest($ihsNumber,$encounter,$medication,$noResep,$aturanPakai,$jumlahObatPerhari,$jumahHariObatHabis)
+    public static function updateMedicationRequest($ihsNumber, $encounter, $medication, $noResep, $aturanPakai, $jumlahObatPerhari, $jumahHariObatHabis)
     {
         $url = Url::updateMedicationRequestUrl($ihsNumber);
-        $formData = jsonData\MedicationRequest::formUpdateData($ihsNumber,$encounter,$medication,$noResep,$aturanPakai,$jumlahObatPerhari,$jumahHariObatHabis);
-        $http = HttpRequest::put($url,$formData);
+        $formData = jsonData\MedicationRequest::formUpdateData($ihsNumber, $encounter, $medication, $noResep, $aturanPakai, $jumlahObatPerhari, $jumahHariObatHabis);
+        $http = HttpRequest::put($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\MedicationRequest::convert($response);
@@ -371,9 +379,9 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function searchProductsByType($type,$start = 1,$limit = 10)
+    public static function searchProductsByType($type, $start = 1, $limit = 10)
     {
-        $url = Url::searchProductsByType($type,$start,$limit);
+        $url = Url::searchProductsByType($type, $start, $limit);
         $http = HttpRequest::get($url);
         if ($http['status']) {
             $response = $http['response'];
@@ -382,24 +390,24 @@ class SatuSehatCore
         return jsonResponse\Error::http($http);
     }
 
-    public static function KycGenerateUrl($nik,$name)
+    public static function KycGenerateUrl($nik, $name)
     {
         $url = Url::kycGenerateUrl();
         $keyPair = Security::generateKey();
-        $formData = jsonData\Kyc::formDataGenerateUrl($keyPair,$nik,$name);
-        $http = HttpRequest::postTextPlain($url,$formData);
+        $formData = jsonData\Kyc::formDataGenerateUrl($keyPair, $nik, $name);
+        $http = HttpRequest::postTextPlain($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
-            return jsonResponse\Kyc::convertGenerateUrl($keyPair,$response);
+            return jsonResponse\Kyc::convertGenerateUrl($keyPair, $response);
         }
         return jsonResponse\Error::http($http);
     }
 
-    public static function KycChallengeCode($nik,$name)
+    public static function KycChallengeCode($nik, $name)
     {
         $url = Url::kycChallengeCode();
-        $formData = jsonData\Kyc::formDataChallengeCode($nik,$name);
-        $http = HttpRequest::post($url,$formData);
+        $formData = jsonData\Kyc::formDataChallengeCode($nik, $name);
+        $http = HttpRequest::post($url, $formData);
         if ($http['status']) {
             $response = $http['response'];
             return jsonResponse\Kyc::convertChallengeCode($response);

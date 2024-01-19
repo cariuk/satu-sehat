@@ -40,12 +40,12 @@ class Condition
                 ]
             ],
             "subject"=> [
-                "reference"=> "Patient/".$encounter->patient->ihs_number,
-                "display"=> $encounter->patient->name
+                "reference"=> "Patient/".$encounter->patient->identifier_satu_sehat,
+                "display"=> $encounter->patient->nama
             ],
             "encounter"=> [
-                "reference"=> "Encounter/".$encounter->ihs_number,
-                "display"=> "Kunjungan pasien pada ".StrHelper::dateTimeId($encounter->period_start)
+                "reference"=> "Encounter/".$encounter->identifier_satu_sehat,
+                "display"=> "Kunjungan pasien pada ".$encounter->tanggal. " " . $encounter->waktu
             ]
         ];
     }
@@ -85,12 +85,12 @@ class Condition
                 ]
             ],
             "subject"=> [
-                "reference"=> "Patient/".$encounter->patient->ihs_number,
-                "display"=> $encounter->patient->name
+                "reference"=> "Patient/".$encounter->patient->identifier_satu_sehat,
+                "display"=> $encounter->patient->nama
             ],
             "encounter"=> [
-                "reference"=> "Encounter/".$encounter->ihs_number,
-                "display"=> "Kunjungan pasien pada ".StrHelper::dateTimeId($encounter->period_start)
+                "reference"=> "Encounter/".$encounter->identifier_satu_sehat,
+                "display"=> "Kunjungan pasien pada ".$encounter->tanggal. " " . $encounter->waktu
             ]
         ];
     }
