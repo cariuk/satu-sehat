@@ -14,7 +14,7 @@ class Auth
 
     public $practitioner_dev = ['10009880728', '10006926841', '10001354453', '10010910332', '10018180913', '10002074224', '10012572188', '10018452434', '10014058550', '10001915884'];
 
-    private static function requestToken(): array
+    private static function requestToken()
     {
         $dotenv = Dotenv::createUnsafeImmutable(getcwd());
         $dotenv->safeLoad();
@@ -79,7 +79,7 @@ class Auth
         }
     }
 
-    private static function generateToken(): array
+    private static function generateToken()
     {
         $requestToken = self::requestToken();
         if ($requestToken['status']) {
@@ -112,7 +112,7 @@ class Auth
         return intval($seconds_difference);
     }
 
-    public static function getToken(): array
+    public static function getToken()
     {
         $token = SatusehatToken::where('environment', getenv('SATUSEHAT_ENV'))->orderBy('created_at', 'desc')
             ->where('created_at', '>', now()->subMinutes(50))->first();
