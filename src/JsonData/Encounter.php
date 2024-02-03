@@ -55,6 +55,7 @@ class Encounter
                     ]
                 ]
             ],
+            "diagnosis" => [],
             "statusHistory" => [
                 [
                     "status" => "finished",
@@ -136,7 +137,7 @@ class Encounter
             ],
             "serviceProvider" => [
                 "reference" => "Organization/" . $organizationId,
-                "display" => "RS Umum Islam Harapan Anda Kota Tegal"
+                "display" => $instansi->LENGKAP
             ],
             "identifier" => [
                 [
@@ -238,8 +239,8 @@ class Encounter
             ],
             "serviceProvider" => [
                 "reference" => "Organization/" . $organizationId,
-                "display" => "RS Umum Islam Harapan Anda Kota Tegal"
-            ]
+                "display" => $instansi->LENGKAP
+            ],
         ];
     }
 }
