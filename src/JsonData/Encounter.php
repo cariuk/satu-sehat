@@ -78,7 +78,7 @@ class Encounter
         ];
     }
 
-    public static function formUpdateData($encounter, $patient, $practitioner, $location)
+    public static function formUpdateData($encounter, $patient, $practitioner, $location, $instansi)
     {
         $organizationId = Enviroment::organizationId();
         $noRawat = StrHelper::cleanNoRawat($encounter->no_rawat);

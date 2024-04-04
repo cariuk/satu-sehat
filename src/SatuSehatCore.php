@@ -135,7 +135,7 @@ class SatuSehatCore
         if ($statusCode == 201) {
             return $response;
         }
-        return jsonResponse\Error::http($http);
+        return jsonResponse\Error::http($response);
     }
 
     public static function updateEncounter($encounter, $patient, $practitioner, $location, $instansi)
@@ -146,7 +146,7 @@ class SatuSehatCore
         if ($statusCode == 200) {
             return $response;
         }
-        return jsonResponse\Error::http($http);
+        return jsonResponse\Error::http($response);
     }
 
     public static function updateEncounterCondition($encounter, $dataDiagnosa, $instansi)
@@ -157,7 +157,7 @@ class SatuSehatCore
         if ($statusCode == 200) {
             return $response;
         }
-        return jsonResponse\Error::http($http);
+        return jsonResponse\Error::http($response);
     }
 
     public static function historyEncounter($ihsNumberPatient)

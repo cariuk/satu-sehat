@@ -89,7 +89,7 @@ class HttpRequest
                 $res = json_decode($e->getResponse()->getBody()->getContents());
 
                 Self::log('Error ' . $statusCode, 'POST', $url, (array)$formData, (array)$res);
-                dd($res);
+
                 return [$statusCode, $res];
             }
         }

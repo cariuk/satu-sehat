@@ -8,6 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/JsonData" isTestSource="false" packagePrefix="syahrulzzadie\SatuSehat\JsonData\" />
       <sourceFolder url="file://$MODULE_DIR$/src/JsonResponse" isTestSource="false" packagePrefix="syahrulzzadie\SatuSehat\JsonResponse\" />
       <sourceFolder url="file://$MODULE_DIR$/src/Utilitys" isTestSource="false" packagePrefix="syahrulzzadie\SatuSehat\Utilitys\" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/copilot/chatSessions" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
