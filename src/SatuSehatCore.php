@@ -167,7 +167,7 @@ class SatuSehatCore
         if ($statusCode == 200) {
             return $response;
         }
-        return jsonResponse\Error::http($http);
+        return jsonResponse\Error::http($response);
     }
 
     public static function createCondition($encounter, $code, $name, $instansi)
@@ -201,7 +201,7 @@ class SatuSehatCore
         if ($statusCode == 201) {
             return $response;
         }
-        return jsonResponse\Error::http($http);
+        return jsonResponse\Error::http($response);
     }
 
     public static function createObservation($encounter, $practitioner, $name, $value)

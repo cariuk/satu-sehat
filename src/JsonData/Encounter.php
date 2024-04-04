@@ -14,7 +14,7 @@ class Encounter
         $noRawat = StrHelper::cleanNoRawat($noRawat);
         return [
             "resourceType" => "Encounter",
-            "status" => "finished",
+            "status" => "arrived",
             "class" => [
                 "system" => "http://terminology.hl7.org/CodeSystem/v3-ActCode",
                 "code" => "AMB",
@@ -148,7 +148,7 @@ class Encounter
         ];
     }
 
-    public static function formUpdateCondition($encounter, $dataDiagnosis)
+    public static function formUpdateCondition($encounter, $dataDiagnosis,$instansi)
     {
         $diagnosis = [];
         foreach ($dataDiagnosis as $item) {
